@@ -1,0 +1,37 @@
+doctype html
+html
+	include head.jade
+	body
+		.test who wanna test it 
+		h3.title this is a title
+		//
+			Comments for your HTML readers.
+			Use as much text as you want.
+		h1
+			p.gramer ho my god this's a <p> title
+		-var friends = 10
+		case friends
+			when 0
+				p you have no friends
+			when 1
+				p you have a friend
+			default
+				p you have #{friends} friends
+
+		-var user = { description : ''}
+		-var authorised = true
+
+		#user 
+			if user.description
+				h2.green Description
+				p.description = user.description
+			else if authorised 
+				h2.blue Description
+				p.description.
+					User has no description,
+					why not add one ...
+				
+			else 
+				h2.red Description
+				p.description User has no description
+	include footer.jade

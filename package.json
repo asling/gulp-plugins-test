@@ -9,7 +9,14 @@
   "author": "andy",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^3.19.0",
     "gulp": "^3.9.1",
-    "gulp-jshint": "^2.0.4"
+    "gulp-eslint": "^3.0.1",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-jade": "^1.1.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-sequence": "^0.4.6",
+    "jshint": "^2.9.4",
+    "pump": "^1.0.2"
   }
 }

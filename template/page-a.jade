@@ -1,0 +1,18 @@
+extends layout.jade
+
+append scripts
+	script(src='/vendor/three.js')
+	script(src='/game.js')
+
+block scripts 
+	script(src="/jquery.js")
+	script(src="/pets.js")
+
+block content
+	h1 title
+	- var pets = ['cat','dog']
+	each petName in pets
+		include pet.jade
+
+	each val,index in ['zero','one','two']
+		li= index + ': '+ val
