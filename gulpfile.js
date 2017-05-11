@@ -8,11 +8,13 @@ var uglify = require("gulp-uglify");
 var rev = require("gulp-rev");
 var revCollector = require("gulp-rev-collector");
 var browserSync = require("browser-sync").create();
-var debug = require("gulp-debug");
+var path = require('path');
+var logger = require("gulp-logger");
+var root = path.join(__dirname,'/');
 gulp.task("connect",function(){
 	browserSync.init({
 		server:{
-			baseDir: '/',
+			baseDir: root,
 			directory: true,
 		},
 		logLevel: 'silent',
@@ -24,7 +26,7 @@ gulp.task('eslint',function(){
 			.pipe(jshint())
 			.pipe(jshint.reporter('default')); */
 	pump([
-		gulp.src("*.js"),
+		gulp.src(root+"*.js"),
 		eslint(),
 		eslint.format(),
 		eslint.failAfterError()
@@ -32,23 +34,23 @@ gulp.task('eslint',function(){
 });
 
 gulp.task('jade',function(){
-	return gulp.src("template/*.jade")
+	return gulp.src(root+"template/*.jade")
 				.pipe(jade())
 				.pipe(gulp.dest("dist"));
 });
 
 gulp.task("copyJs",function(){
-	return gulp.src(["*.js","!gulpfile.js"])
+	return gulp.src([root+"js/*.js",'!'+root+"js/ignore.js"])
 			.pipe(uglify()) //压缩
 			.pipe(rev())	//缓存
-			.pipe(gulp.dest("dist/js"))
+			.pipe(gulp.dest(root+"dist/js"))
 			.pipe(rev.manifest())
-			.pipe(gulp.dest('dist/rev/js'))
+			.pipe(gulp.dest(root+'dist/rev/js'))
 });
 
 gulp.task('htmlMin',function(){
 	pump([
-		gulp.src("dist/*.html"),
+		gulp.src(root+"dist/*.html"),
 		htmlMin({
 			removeComments: true, //清除HTML注释
             collapseWhitespace: true, //压缩HTML
@@ -59,26 +61,24 @@ gulp.task('htmlMin',function(){
             minifyJS: true, //压缩页面JS
             minifyCSS: true //压缩页面CSS
 		}),
-		gulp.dest("dist")
+		gulp.dest(root+"dist")
 	]);
 });
 
-gulp.watch("jadeWatch",function(){
+gulp.task("jadeWatch",function(){
 	gulpSequence('jade',browserSync.reload);
 });
 
-gulp.task("watch",function(){
-	gulp.watch('template/*.jade',['jadeWatch']);
-	gulp.watch(['*.js','!gulpfile.js'],function(event){
-
-	});
+gulp.task("jsWatch",function(){
+	gulpSequence('copyJs',browserSync.reload);
 });
 
-gulp.task('default',gulpSequence(['eslint'],['jade']));
+gulp.task("watch",function(){
+	gulp.watch(root+'template/*.jade',['jadeWatch']);
+	gulp.watch([root+'js/*.js','!'+root+'js/ignore.js'],['jsWatch']);
+});
 
-gulp.task('test-debug',()=>
-	gulp.src("app.js")
-		.pipe(debug({title:'test'}))
-);
+gulp.task('default',gulpSequence(['eslint'],['jade','copyJs'],['connect','watch']));
+
 
 
