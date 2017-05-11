@@ -8,6 +8,7 @@ var uglify = require("gulp-uglify");
 var rev = require("gulp-rev");
 var revCollector = require("gulp-rev-collector");
 var browserSync = require("browser-sync").create();
+var debug = require("gulp-debug");
 gulp.task("connect",function(){
 	browserSync.init({
 		server:{
@@ -62,10 +63,22 @@ gulp.task('htmlMin',function(){
 	]);
 });
 
+gulp.watch("jadeWatch",function(){
+	gulpSequence('jade',browserSync.reload);
+});
+
 gulp.task("watch",function(){
-	var jsWatcher = gulp.watch()
+	gulp.watch('template/*.jade',['jadeWatch']);
+	gulp.watch(['*.js','!gulpfile.js'],function(event){
+
+	});
 });
 
 gulp.task('default',gulpSequence(['eslint'],['jade']));
+
+gulp.task('test-debug',()=>
+	gulp.src("app.js")
+		.pipe(debug({title:'test'}))
+);
 
 
