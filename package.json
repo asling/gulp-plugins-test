@@ -15,7 +15,6 @@
     "gulp-htmlmin": "^3.0.0",
     "gulp-jade": "^1.1.0",
     "gulp-jshint": "^2.0.4",
-    
     "gulp-sequence": "^0.4.6",
     "gulp-uglify": "^2.1.2",
     "jshint": "^2.9.4",
@@ -24,6 +23,6 @@
   "dependencies": {
     "browser-sync": "^2.18.8",
     "gulp-rev": "^7.1.2",
-    "gulp-rev-collector": "^1.1.1",
+    "gulp-rev-collector": "^1.1.1"
   }
 }
