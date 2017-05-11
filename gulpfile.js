@@ -4,6 +4,19 @@ var gulpSequence = require("gulp-sequence");
 var htmlMin = require("gulp-htmlmin");
 var jade = require("gulp-jade");
 var pump = require('pump');
+var uglify = require("gulp-uglify");
+var rev = require("gulp-rev");
+var revCollector = require("gulp-rev-collector");
+var browserSync = require("browser-sync").create();
+gulp.task("connect",function(){
+	browserSync.init({
+		server:{
+			baseDir: '/',
+			directory: true,
+		},
+		logLevel: 'silent',
+	})
+});
 
 gulp.task('eslint',function(){
 	/*return gulp.src("app.js")
@@ -23,6 +36,15 @@ gulp.task('jade',function(){
 				.pipe(gulp.dest("dist"));
 });
 
+gulp.task("copyJs",function(){
+	return gulp.src(["*.js","!gulpfile.js"])
+			.pipe(uglify()) //压缩
+			.pipe(rev())	//缓存
+			.pipe(gulp.dest("dist/js"))
+			.pipe(rev.manifest())
+			.pipe(gulp.dest('dist/rev/js'))
+});
+
 gulp.task('htmlMin',function(){
 	pump([
 		gulp.src("dist/*.html"),
@@ -38,6 +60,10 @@ gulp.task('htmlMin',function(){
 		}),
 		gulp.dest("dist")
 	]);
+});
+
+gulp.task("watch",function(){
+	var jsWatcher = gulp.watch()
 });
 
 gulp.task('default',gulpSequence(['eslint'],['jade']));
